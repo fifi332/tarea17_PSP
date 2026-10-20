@@ -4,6 +4,7 @@ import java.util.Scanner;
 
 class Contador {
     int valor = 0;
+
     synchronized void incrementar(int cantidad) {
         valor += cantidad;
     }
@@ -39,13 +40,26 @@ public class Tarea17 {
         char[] consonantes = new char[5];
 
         for (int i = 0; i < 5; i++) {
-            System.out.print("Introduce una consonante: ");
-            consonantes[i] = sc.nextLine().charAt(0);
+            char letra;
+            boolean esConsonante;
+
+            do {
+                System.out.print("Introduce una consonante: ");
+                letra = sc.nextLine().toLowerCase().charAt(0);
+
+                esConsonante = Character.isLetter(letra)
+                        && "aeiouáéíóúü".indexOf(letra) == -1;
+
+                if (!esConsonante) {
+                    System.out.println("No es una consonante.");
+                }
+            } while (!esConsonante);
+
+            consonantes[i] = letra;
         }
 
         System.out.print("Introduce el texto: ");
         String texto = sc.nextLine();
-
 
         Contador c = new Contador();
         Hilo[] hilos = new Hilo[5];
@@ -54,6 +68,7 @@ public class Tarea17 {
             hilos[i] = new Hilo(c, consonantes[i], texto);
             hilos[i].start();
         }
+
         for (int i = 0; i < 5; i++) {
             hilos[i].join();
         }
